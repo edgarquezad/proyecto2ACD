@@ -1,13 +1,14 @@
 package org.example;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import org.example.Utils.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+
+public class App {
+    public static void main(String[] args) throws SQLException {
+        DatabaseConnection database = DatabaseConnection.getInstance();
+        Connection connection = database.getConnection();
     }
 }
