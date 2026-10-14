@@ -4,11 +4,78 @@ import org.example.Utils.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 
 public class App {
     public static void main(String[] args) throws SQLException {
         DatabaseConnection database = DatabaseConnection.getInstance();
         Connection connection = database.getConnection();
+
+
+        Scanner entrada = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\n===== ASOCIACIÓN DE JUEGOS DE MESA =====");
+            System.out.println(
+                    "1. Gestionar juegos de mesa \n" +
+                    "2. Gestionar socias \n" +
+                    "3. Gestionar partidas \n" +
+                    "4. Gestionar invitadas \n" +
+                    "5. Gestionar datos de la asociación \n" +
+                    "6. Consultar metadatos de la base de datos\n" +
+                    "7. Exportar datos a XML\n" +
+                    "8. Exportar datos a JSON \n" +
+                    "0. Salir \n");
+            System.out.print("Elige una opción: ");
+
+            while (!entrada.hasNextInt()) {
+                System.out.println("Introduce un número válido.");
+                entrada.next();
+                System.out.print("Elige una opción: ");
+            }
+           opcion = entrada.nextInt();
+
+
+            switch (opcion) {
+                case 1:
+                    System.out.println("Gestión de juegos de mesa");
+                    break;
+                case 2:
+                    System.out.println("Gestión de socias");
+                    break;
+                case 3:
+                    System.out.println("Gestión de partidas");
+                    break;
+                case 4:
+                    System.out.println("Gestión de invitadas");
+                    break;
+                case 5:
+                    System.out.println("Datos de la asociación");
+                    break;
+                case 6:
+                    System.out.println("Metadatos de la base de datos");
+                    break;
+                case 7:
+                    System.out.println("Exportación a XML");
+                    break;
+                case 8:
+                    System.out.println("Exportación a JSON");
+                    break;
+                case 0:
+                    System.out.println("Saliendo de la aplicación...");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+
+        } while (opcion != 0);
+        entrada.close();
+
     }
 }
+
+
+
+
