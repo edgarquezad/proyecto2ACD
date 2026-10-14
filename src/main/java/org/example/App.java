@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws SQLException {
+
+        try{
         DatabaseConnection database = DatabaseConnection.getInstance();
         Connection connection = database.getConnection();
 
@@ -73,6 +75,9 @@ public class App {
         } while (opcion != 0);
         entrada.close();
 
+    }catch (SQLException e){
+        e.printStackTrace();
+            System.out.println("error de conexion con la base de datos / data base error conection ");}
     }
 }
 
