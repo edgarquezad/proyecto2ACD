@@ -106,7 +106,7 @@ public class App {
             entrada.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+
             System.out.println("error de conexion con la base de datos / data base error conection ");
         }
     }
