@@ -1,9 +1,11 @@
 package org.example.IMPDao;
+
 import org.example.Dao.juego.juegoDao;
 import org.example.Model.estado;
 import org.example.Model.juego.juego;
 import org.example.Model.tipo;
 import org.example.Utils.DatabaseConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class impJuego implements juegoDao {
                 String estado = juego.getEstado().name();
 
                 if (estado.equals("en_reparacion")) {
-                    estado = "En reparacion";
+                    estado = "En reparación";
                 }
 
                 ps.setString(10, estado);
@@ -194,15 +196,12 @@ public class impJuego implements juegoDao {
                 }
                 juego.setDocumentoPropietaria(rs.getString("documento_propietaria"));
 
-                return juegos;
-
-
             }
+            return juegos;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return juegos;
     }
 
 

@@ -45,6 +45,7 @@ public class juego {
     public int getIdJuego() {
         return idJuego;
     }
+
     public void setIdJuego(int idJuego) {
         this.idJuego = idJuego;
     }
@@ -54,6 +55,7 @@ public class juego {
     }
 
     public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getAutores() {
