@@ -1,8 +1,15 @@
 package org.example;
 
+import org.example.IMPDao.asociacion.impAsociacion;
+import org.example.IMPDao.impJuego;
+import org.example.Model.asociacion.asociacion;
+import org.example.Model.estado;
+import org.example.Model.juego.juego;
+import org.example.Model.tipo;
 import org.example.Utils.DatabaseConnection;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -38,6 +45,7 @@ public class App {
                     System.out.print("Elige una opción: ");
                 }
                 opcion = entrada.nextInt();
+                entrada.nextLine();
 
 
                 switch (opcion) {
@@ -53,10 +61,62 @@ public class App {
 
 
                         opcionJuegos = entrada.nextInt();
+                        entrada.nextLine();
+
 
                         switch (opcionJuegos) {
+
                             case 1:
                                 System.out.println("add Games / añadir juego");
+
+                                System.out.println("nombre del juego /name game :");
+                                String nombre = entrada.nextLine();
+
+                                System.out.println("autor/s :");
+                                String autores = entrada.nextLine();
+
+                                System.out.println("descripcion del juego /game description :");
+                                String descripcion = entrada.nextLine();
+
+                                System.out.println("numero minimo de jugadores: ");
+                                int min_players = Integer.parseInt(entrada.nextLine());
+
+                                System.out.println("maximo de jugadores: :");
+                                int max_players = Integer.parseInt(entrada.nextLine());
+
+                                System.out.println("duracion en minutos: ");
+                                int duracion = Integer.parseInt(entrada.nextLine());
+
+                                System.out.println("tematica: ");
+                                String tematica = entrada.nextLine();
+
+                                System.out.println("tipo :");
+                                String tipojuego = entrada.nextLine();
+                                tipo tipo = org.example.Model.tipo.valueOf(tipojuego.toLowerCase());
+
+                                System.out.println("ubicacion: ");
+                                String ubicacion = entrada.nextLine();
+
+                                System.out.println("estado : 'Prestado','Disponible','En_Reparacion' ");
+                                String estadoP = entrada.nextLine();
+                                estado estado = org.example.Model.estado.valueOf(estadoP.toLowerCase());
+
+                                System.out.println("fecha de alta: ");
+                                Date fecha_alta = Date.valueOf(entrada.nextLine());
+
+                                System.out.println("id asociacion: ");
+                                int id_asociacion = Integer.parseInt(entrada.nextLine());
+
+                                System.out.println("documento Propietaria: ");
+                                String documento_propietaria = entrada.nextLine();
+
+
+                                juego juego = new juego(nombre, autores, descripcion, min_players, max_players, duracion, tematica,
+                                        tipo, ubicacion, estado, fecha_alta, id_asociacion, documento_propietaria);
+
+                                impJuego impJuego = new impJuego();
+                                impJuego.add(juego);
+
                                 break;
                             case 2:
                                 System.out.println("view Games / mostrar juego");
@@ -84,7 +144,63 @@ public class App {
                         System.out.println("Gestión de invitadas");
                         break;
                     case 5:
-                        System.out.println("Datos de la asociación");
+                        int opcionAsociacion;
+                        do {
+                            System.out.println("\n--- GESTIÓN DE ASOCIACIONES ---");
+                            System.out.println("1. Añadir asociación");
+                            System.out.println("0. Volver al menú principal");
+                            System.out.println("Elige una opción:");
+
+                            opcionAsociacion = entrada.nextInt();
+                            entrada.nextLine();
+
+                            switch (opcionAsociacion) {
+                                case 1:
+                                    System.out.println("Nombre de la asociación:");
+                                    String nombre = entrada.nextLine();
+
+                                    System.out.println("CIF:");
+                                    String cif = entrada.nextLine();
+
+                                    System.out.println("Dirección:");
+                                    String direccion = entrada.nextLine();
+
+                                    System.out.println("Teléfono:");
+                                    String telefono = entrada.nextLine();
+
+                                    System.out.println("Email:");
+                                    String email = entrada.nextLine();
+
+                                    System.out.println("Fecha de apertura (AAAA-MM-DD):");
+                                    java.sql.Date fechaApertura =
+                                            java.sql.Date.valueOf(entrada.nextLine());
+
+                                    asociacion asociacion = new asociacion(
+                                            nombre, cif, direccion, telefono, email, fechaApertura
+                                    );
+
+                                    impAsociacion daoAsociacion = new impAsociacion();
+                                    int idGenerado = daoAsociacion.add(asociacion);
+
+                                    if (idGenerado > 0) {
+                                        System.out.println(
+                                                "Asociación creada correctamente. ID: " + idGenerado
+                                        );
+                                    } else {
+                                        System.out.println("No se ha podido crear la asociación.");
+                                    }
+                                    break;
+
+                                case 0:
+                                    System.out.println("Volviendo al menú principal...");
+                                    break;
+
+                                default:
+                                    System.out.println("Opción no válida.");
+                            }
+
+                        } while (opcionAsociacion != 0);
+
                         break;
                     case 6:
                         System.out.println("Metadatos de la base de datos");
