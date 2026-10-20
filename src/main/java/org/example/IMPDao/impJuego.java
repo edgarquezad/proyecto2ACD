@@ -86,7 +86,7 @@ public class impJuego implements juegoDao {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM juegos WHERE id_juego = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -95,12 +95,14 @@ public class impJuego implements juegoDao {
             int filas = ps.executeUpdate();
 
             if (filas == 0) {
-                System.out.println("No se ha encontrado ningún juego con ese ID.");
+                return false;
             }
+            return true;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
@@ -124,7 +126,7 @@ public class impJuego implements juegoDao {
                     juego.setTematica(rs.getString("tematica"));
 
                     juego.setTipo(tipo.valueOf(
-                            rs.getString("tipo").toUpperCase()));
+                            rs.getString("tipo").toLowerCase()));
 
                     juego.setUbicacion(rs.getString("ubicacion"));
 
@@ -135,7 +137,7 @@ public class impJuego implements juegoDao {
                         estadoBD = "en_reparacion";
                     }
 
-                    juego.setEstado(estado.valueOf(estadoBD.toUpperCase()));
+                    juego.setEstado(estado.valueOf(estadoBD.toLowerCase()));
                     juego.setFechaAlta(rs.getDate("fecha_alta"));
 
                     int idAsociacion = rs.getInt("id_asociacion");
@@ -177,7 +179,7 @@ public class impJuego implements juegoDao {
                 juego.setMaximoJuegadores(rs.getInt("max_jugadores"));
                 juego.setDuracion(rs.getInt("duracion"));
                 juego.setTematica(rs.getString("tematica"));
-                juego.setTipo(tipo.valueOf(rs.getString("tipo").toUpperCase()));
+                juego.setTipo(tipo.valueOf(rs.getString("tipo").toLowerCase()));
                 juego.setUbicacion(rs.getString("ubicacion"));
                 String estadoBD = rs.getString("estado");
 
@@ -185,7 +187,7 @@ public class impJuego implements juegoDao {
                         || estadoBD.equalsIgnoreCase("En reparacion")) {
                     estadoBD = "en_reparacion";
                 }
-                juego.setEstado(estado.valueOf(estadoBD.toUpperCase()));
+                juego.setEstado(estado.valueOf(estadoBD.toLowerCase()));
                 juego.setFechaAlta(rs.getDate("fecha_alta"));
                 int idAsociacion = rs.getInt("id_asociacion");
 
@@ -195,11 +197,13 @@ public class impJuego implements juegoDao {
                     juego.setId_asociacion(idAsociacion);
                 }
                 juego.setDocumentoPropietaria(rs.getString("documento_propietaria"));
-
+                juegos.add(juego);
             }
+
             return juegos;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("fallo en realizar la consulta del juego\n " + e.getMessage());
+
         }
 
     }

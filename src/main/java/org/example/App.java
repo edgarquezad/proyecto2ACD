@@ -11,6 +11,7 @@ import org.example.Utils.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -63,7 +64,7 @@ public class App {
                         opcionJuegos = entrada.nextInt();
                         entrada.nextLine();
 
-
+                        impJuego impJuego = new impJuego();
                         switch (opcionJuegos) {
 
                             case 1:
@@ -92,14 +93,14 @@ public class App {
 
                                 System.out.println("tipo :");
                                 String tipojuego = entrada.nextLine();
-                                tipo tipo = org.example.Model.tipo.valueOf(tipojuego.toLowerCase());
+                                tipo tipoEnum = tipo.valueOf(tipojuego.toLowerCase());
 
                                 System.out.println("ubicacion: ");
                                 String ubicacion = entrada.nextLine();
 
                                 System.out.println("estado : 'Prestado','Disponible','En_Reparacion' ");
                                 String estadoP = entrada.nextLine();
-                                estado estado = org.example.Model.estado.valueOf(estadoP.toLowerCase());
+                                estado Estado = estado.valueOf(estadoP.toLowerCase());
 
                                 System.out.println("fecha de alta: ");
                                 Date fecha_alta = Date.valueOf(entrada.nextLine());
@@ -112,20 +113,107 @@ public class App {
 
 
                                 juego juego = new juego(nombre, autores, descripcion, min_players, max_players, duracion, tematica,
-                                        tipo, ubicacion, estado, fecha_alta, id_asociacion, documento_propietaria);
+                                        tipoEnum, ubicacion, Estado, fecha_alta, id_asociacion, documento_propietaria);
 
-                                impJuego impJuego = new impJuego();
+
                                 impJuego.add(juego);
 
                                 break;
                             case 2:
                                 System.out.println("view Games / mostrar juego");
+                                impJuego mostrarJuegos = new impJuego();
+                                List<juego> juegos = mostrarJuegos.getjuegos();
+                                if (juegos.isEmpty()) {
+                                    System.out.println("No hay juegos disponibles.");
+                                } else {
+                                    for (juego juego1 : juegos) {
+                                        System.out.println(
+                                                "id: " + juego1.getIdJuego()
+                                                        + "nombre : " + juego1.getNombre() + "\n"
+                                                        + "Autores: " + juego1.getAutores() + "\n"
+                                                        + "Descripción: " + juego1.getDescripcion() + "\n"
+                                                        + "Tipo: " + juego1.getTipo() + "\n"
+                                                        + "Estado: " + juego1.getEstado()
+                                        );
+
+                                    }
+                                }
+
+
                                 break;
                             case 3:
                                 System.out.println("edit Games / editar juego");
+
+                                System.out.println("id del juego que se quiere editar :");
+                                int id = Integer.parseInt(entrada.nextLine());
+                                juego editarJuego = impJuego.getjuego(id);
+
+                                if (editarJuego == null) {
+                                    System.out.println("no existe juego con ese ID");
+                                } else {
+                                    System.out.println("Juego encontrado: /n" +
+                                            "Nombre: " + editarJuego.getNombre());
+
+                                    System.out.println("nuevo nombre: ");
+                                    editarJuego.setNombre(entrada.nextLine());
+
+                                    System.out.println("nuevo autores: ");
+                                    editarJuego.setAutores(entrada.nextLine());
+
+                                    System.out.println("nuevo descripcion: ");
+                                    editarJuego.setDescripcion(entrada.nextLine());
+
+                                    System.out.println("nuevo numero minimo: ");
+                                    editarJuego.setMaximoJuegadores(Integer.parseInt(entrada.nextLine()));
+
+                                    System.out.println("nuevo maximo de jugadores: ");
+                                    editarJuego.setMaximoJuegadores(Integer.parseInt(entrada.nextLine()));
+
+                                    System.out.println("nuevo duracion: ");
+                                    editarJuego.setDuracion(Integer.parseInt(entrada.nextLine()));
+
+                                    System.out.println("nuevo tematica: ");
+                                    editarJuego.setTematica(entrada.nextLine());
+
+                                    System.out.println("nuevo tipo:(cooperativo/competitivo)");
+                                    String tipoNuevo = entrada.nextLine().toLowerCase();
+                                    editarJuego.setTipo(tipo.valueOf(tipoNuevo));
+
+
+                                    System.out.println("Nuevo estado (disponible/prestado/en_reparacion):");
+                                    String estadoNuevo = entrada.nextLine().toLowerCase();
+                                    editarJuego.setEstado(estado.valueOf(estadoNuevo));
+
+                                    System.out.println("ID de la asociación (0 si pertenece a una socia):");
+                                    int idAsociacion = Integer.parseInt(entrada.nextLine());
+
+                                    editarJuego.setId_asociacion(idAsociacion);
+                                    if (idAsociacion == 0) {
+                                        System.out.println("Documento de la socia propietaria:");
+                                        editarJuego.setDocumentoPropietaria(entrada.nextLine());
+                                    } else {
+                                        editarJuego.setDocumentoPropietaria(null);
+                                    }
+                                    boolean actualizado = impJuego.update(editarJuego);
+                                    if (actualizado) {
+                                        System.out.println("Juego actualizado correctamente");
+                                    } else
+                                        System.out.println("error al modificar el juego");
+
+                                }
+
+
                                 break;
                             case 4:
                                 System.out.println("delete Games / eliminar juego");
+                                System.out.println("id del juego que se quiere eliminar :");
+
+                                boolean eliminado = impJuego.delete(Integer.parseInt(entrada.nextLine()));
+                                if (eliminado) {
+                                    System.out.println("Juego eliminado correctamente");
+                                } else
+                                    System.out.println("error al eliminar el juego");
+
                                 break;
                             case 0:
                                 System.out.println("return home / regresar al menu ");
