@@ -1,7 +1,7 @@
-package org.example.IMPDao.asociacion;
+package org.example.IMPDao;
 
-import org.example.Dao.asociacion.asociacionDao;
-import org.example.Model.asociacion.asociacion;
+import org.example.Dao.asociacionDao;
+import org.example.Model.asociacion;
 import org.example.Utils.DatabaseConnection;
 
 import java.sql.*;

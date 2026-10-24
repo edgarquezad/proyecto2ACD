@@ -1,11 +1,9 @@
 package org.example;
 
-import org.example.IMPDao.asociacion.impAsociacion;
+import org.example.IMPDao.socioDaoImpl;
+import org.example.IMPDao.impAsociacion;
 import org.example.IMPDao.impJuego;
-import org.example.Model.asociacion.asociacion;
-import org.example.Model.estado;
-import org.example.Model.juego.juego;
-import org.example.Model.tipo;
+import org.example.Model.*;
 import org.example.Utils.DatabaseConnection;
 
 import java.sql.Connection;
@@ -21,9 +19,8 @@ public class App {
         try {
             DatabaseConnection database = DatabaseConnection.getInstance();
             Connection connection = database.getConnection();
-
-
             Scanner entrada = new Scanner(System.in);
+
             int opcion;
 
             do {
@@ -68,6 +65,7 @@ public class App {
                         switch (opcionJuegos) {
 
                             case 1:
+
                                 System.out.println("add Games / añadir juego");
 
                                 System.out.println("nombre del juego /name game :");
@@ -119,6 +117,7 @@ public class App {
                                 impJuego.add(juego);
 
                                 break;
+
                             case 2:
                                 System.out.println("view Games / mostrar juego");
                                 impJuego mostrarJuegos = new impJuego();
@@ -164,7 +163,7 @@ public class App {
                                     editarJuego.setDescripcion(entrada.nextLine());
 
                                     System.out.println("nuevo numero minimo: ");
-                                    editarJuego.setMaximoJuegadores(Integer.parseInt(entrada.nextLine()));
+                                    editarJuego.setMinimoJugadores(Integer.parseInt(entrada.nextLine()));
 
                                     System.out.println("nuevo maximo de jugadores: ");
                                     editarJuego.setMaximoJuegadores(Integer.parseInt(entrada.nextLine()));
@@ -202,8 +201,8 @@ public class App {
 
                                 }
 
-
                                 break;
+
                             case 4:
                                 System.out.println("delete Games / eliminar juego");
                                 System.out.println("id del juego que se quiere eliminar :");
@@ -213,8 +212,8 @@ public class App {
                                     System.out.println("Juego eliminado correctamente");
                                 } else
                                     System.out.println("error al eliminar el juego");
-
                                 break;
+
                             case 0:
                                 System.out.println("return home / regresar al menu ");
                                 break;
@@ -223,8 +222,142 @@ public class App {
 
                         break;
                     case 2:
-                        System.out.println("Gestión de socias");
-                        break;
+                        System.out.println("Gestión de socios");
+
+                        System.out.println("1 - Añadir socios   " +
+                                "2 - Eliminar socios" +
+                                "3- Editar Socios" +
+                                "4 - Listar Socios" +
+                                "5 - Buscar Socios" +
+                                "0. - Volver"
+                        );
+                        System.out.print("Elige una opción: ");
+                        int opcionGestion = entrada.nextInt();
+
+                        socioDaoImpl socioDao = new socioDaoImpl();
+                        entrada.nextLine();
+
+
+                        switch (opcionGestion) {
+                            case 1:
+                                System.out.println("----AÑADIR SOCIOS---\n ");
+                                System.out.println("Ingrese el documento del socio:");
+                                String documento = entrada.nextLine();
+
+                                System.out.println("Ingresa el nombre del socio: ");
+                                String nombre = entrada.nextLine();
+
+                                System.out.println("Ingresa los apellidos del socio: ");
+                                String apellidos = entrada.nextLine();
+
+                                System.out.println("Ingrese el telefono del socio: ");
+                                String telefono = entrada.nextLine();
+
+
+                                System.out.println("Ingrese la edad del socio: ");
+                                int edad = Integer.parseInt(entrada.nextLine());
+
+                                System.out.println("Ingresa el email del socio: ");
+                                String email = entrada.nextLine();
+
+                                socio socio = new socio(documento, nombre, apellidos, telefono, edad, email);
+
+                                int resultado = socioDao.add(socio);
+
+                                if (resultado == 0) {
+                                    System.out.println("no se pudo agregar el socio");
+                                } else {
+                                    System.out.println("el socio agregado correctamente");
+                                }
+                                break;
+
+                            case 2:
+                                System.out.println("----ELIMINAR SOCIOS---\n ");
+
+                                System.out.println("Ingrese el documento del socio: ");
+                                documento = entrada.nextLine();
+
+
+                                boolean eliminado = socioDao.delete(documento);
+
+                                if (eliminado) {
+                                    System.out.println("el socio eliminado correctamente");
+                                } else
+                                    System.out.println("error al eliminar el socio");
+                                break;
+
+                            case 3:
+                                System.out.println("--- EDITAR SOCIO ---");
+
+                                System.out.println("Ingrese el documento del socio:");
+                                String documentoEditar = entrada.nextLine();
+
+                                socio socioEditar = socioDao.getSocia(documentoEditar);
+
+                                if (socioEditar != null) {
+                                    System.out.println("Ingrese el nuevo nombre:");
+                                    socioEditar.setNombre(entrada.nextLine());
+
+                                    System.out.println("Ingrese los nuevos apellidos:");
+                                    socioEditar.setApellidos(entrada.nextLine());
+
+                                    System.out.println("Ingrese el nuevo teléfono:");
+                                    socioEditar.setTelefono(entrada.nextLine());
+
+                                    System.out.println("Ingrese la nueva edad:");
+                                    socioEditar.setEdad(Integer.parseInt(entrada.nextLine()));
+
+                                    System.out.println("Ingrese el nuevo email:");
+                                    socioEditar.setEmail(entrada.nextLine());
+
+                                    boolean actualizado = socioDao.update(socioEditar);
+
+                                    if (actualizado) {
+                                        System.out.println("Socio modificado correctamente");
+                                    } else {
+                                        System.out.println("Error al modificar el socio");
+                                    }
+
+                                } else {
+                                    System.out.println("No se ha encontrado el socio");
+                                }
+                                break;
+
+                            case 4:
+                                System.out.println("--- LISTAR SOCIOS ---");
+
+                                List<socio> listaSocios = socioDao.getSocias();
+
+                                if (listaSocios.isEmpty()) {
+                                    System.out.println("No hay socios registrados");
+                                } else {
+                                    for (socio s : listaSocios) {
+                                        System.out.println(s);
+                                    }
+                                }
+                                break;
+
+                            case 5:
+                                System.out.println("--- BUSCAR SOCIO ---");
+
+                                System.out.println("Ingrese el documento del socio:");
+                                String documentoBuscar = entrada.nextLine();
+
+                                socio socioEncontrado = socioDao.getSocia(documentoBuscar);
+
+                                if (socioEncontrado != null) {
+                                    System.out.println(socioEncontrado);
+                                } else {
+                                    System.out.println("No se ha encontrado el socio");
+                                }
+                                break;
+                            case 0:
+                                System.out.println("return home / regresar al menu ");
+                                break;
+
+                        }
+
+
                     case 3:
                         System.out.println("Gestión de partidas");
                         break;
@@ -245,7 +378,7 @@ public class App {
                             switch (opcionAsociacion) {
                                 case 1:
                                     System.out.println("Nombre de la asociación:");
-                                    String nombre = entrada.nextLine();
+                                    String nombre = entrada.nextLine().toUpperCase();
 
                                     System.out.println("CIF:");
                                     String cif = entrada.nextLine();

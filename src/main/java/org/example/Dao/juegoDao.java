@@ -1,6 +1,6 @@
-package org.example.Dao.juego;
+package org.example.Dao;
 
-import org.example.Model.juego.juego;
+import org.example.Model.juego;
 
 import java.util.List;
 

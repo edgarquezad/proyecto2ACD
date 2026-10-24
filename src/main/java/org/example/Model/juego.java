@@ -1,7 +1,4 @@
-package org.example.Model.juego;
-
-import org.example.Model.estado;
-import org.example.Model.tipo;
+package org.example.Model;
 
 import java.util.Date;
 

@@ -1,8 +1,8 @@
 package org.example.IMPDao;
 
-import org.example.Dao.juego.juegoDao;
+import org.example.Dao.juegoDao;
 import org.example.Model.estado;
-import org.example.Model.juego.juego;
+import org.example.Model.juego;
 import org.example.Model.tipo;
 import org.example.Utils.DatabaseConnection;
 
@@ -89,7 +89,8 @@ public class impJuego implements juegoDao {
     public boolean delete(int id) {
         String sql = "DELETE FROM juegos WHERE id_juego = ?";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, id);
 
             int filas = ps.executeUpdate();
@@ -273,6 +274,8 @@ public class impJuego implements juegoDao {
             }
 
             ps.setInt(14, juego.getIdJuego());
+            System.out.println("Mínimo: " + juego.getMinimoJugadores());
+            System.out.println("Máximo: " + juego.getMaximoJuegadores());
 
             return ps.executeUpdate() > 0;
 

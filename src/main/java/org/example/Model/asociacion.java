@@ -1,4 +1,4 @@
-package org.example.Model.asociacion;
+package org.example.Model;
 
 import java.sql.Date;
 
