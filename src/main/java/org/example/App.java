@@ -353,13 +353,16 @@ public class App {
                                 break;
                             case 0:
                                 System.out.println("return home / regresar al menu ");
+
                                 break;
 
                         }
+                        break;
 
 
                     case 3:
-                        System.out.println("Gestión de partidas");
+
+
                         break;
                     case 4:
                         System.out.println("Gestión de invitadas");
