@@ -29,11 +29,11 @@ public class impPartida implements partidaDao {
         try (PreparedStatement ps = conexion.prepareStatement(
                 sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-            ps.setInt(1, partida.getId_juego());
+            ps.setInt(1, partida.getIdJuego());
             ps.setDate(2, partida.getFecha());
             ps.setTime(3, partida.getHora());
-            ps.setInt(4, partida.getPlazas_libres());
-            ps.setInt(5, partida.getJugadores_deseados());
+            ps.setInt(4, partida.getPlazasLibres());
+            ps.setInt(5, partida.getJugadoresDeseados());
 
             int filas = ps.executeUpdate();
 
@@ -77,7 +77,6 @@ public class impPartida implements partidaDao {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new partida(
-                            rs.getInt("id_partida"),
                             rs.getInt("id_juego"),
                             rs.getDate("fecha"),
                             rs.getTime("hora"),
@@ -105,7 +104,7 @@ public class impPartida implements partidaDao {
 
             while (rs.next()) {
                 partidas.add(new partida(
-                        rs.getInt("id_partida"),
+
                         rs.getInt("id_juego"),
                         rs.getDate("fecha"),
                         rs.getTime("hora"),
@@ -133,12 +132,11 @@ public class impPartida implements partidaDao {
                 "WHERE id_partida = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, partida.getId_juego());
+            ps.setInt(1, partida.getIdJuego());
             ps.setDate(2, partida.getFecha());
             ps.setTime(3, partida.getHora());
-            ps.setInt(4, partida.getPlazas_libres());
-            ps.setInt(5, partida.getJugadores_deseados());
-            ps.setInt(6, partida.getId_partida());
+            ps.setInt(4, partida.getPlazasLibres());
+            ps.setInt(5, partida.getJugadoresDeseados());
 
             return ps.executeUpdate() > 0;
 
@@ -152,9 +150,9 @@ public class impPartida implements partidaDao {
         if (partida == null
                 || partida.getFecha() == null
                 || partida.getHora() == null
-                || partida.getId_juego() <= 0
-                || partida.getPlazas_libres() < 0
-                || partida.getJugadores_deseados() <= 0) {
+                || partida.getIdJuego() <= 0
+                || partida.getPlazasLibres() < 0
+                || partida.getJugadoresDeseados() <= 0) {
 
             System.out.println("Los datos de la partida no son válidos.");
             return false;
@@ -164,7 +162,7 @@ public class impPartida implements partidaDao {
                 "FROM juegos WHERE id_juego = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, partida.getId_juego());
+            ps.setInt(1, partida.getIdJuego());
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
@@ -175,8 +173,8 @@ public class impPartida implements partidaDao {
                 int minimo = rs.getInt("min_jugadores");
                 int maximo = rs.getInt("max_jugadores");
 
-                if (partida.getJugadores_deseados() < minimo
-                        || partida.getJugadores_deseados() > maximo) {
+                if (partida.getJugadoresDeseados() < minimo
+                        || partida.getJugadoresDeseados() > maximo) {
                     System.out.println(
                             "El número de jugadores debe estar entre "
                                     + minimo + " y " + maximo + "."
