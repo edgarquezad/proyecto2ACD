@@ -492,6 +492,7 @@ public class App {
 
             impPartida impPartida = new impPartida();
 
+
             switch (seleccion) {
 
                 case 1:
@@ -501,10 +502,10 @@ public class App {
                     int id_juego = opcion.nextInt();
 
                     System.out.println("fecha: ");
-                    Date fecha = new Date(opcion.nextLong());
+                    Date fecha = Date.valueOf(opcion.next());
 
                     System.out.println("hora : ");
-                    Time hora = new Time(opcion.nextLong());
+                    Time hora = Time.valueOf(opcion.next());
 
                     System.out.println("plazasLibres: ");
                     int plazasLibres = opcion.nextInt();
@@ -520,6 +521,45 @@ public class App {
                     } else {
                         System.out.println("No se ha podido crear la partida");
                     }
+                    break;
+
+                case 2 :
+                    System.out.println("Eliminar Partida");
+                    System.out.println("Id de partida ");
+                    while (!opcion.hasNextInt()) {
+                        System.out.println("Ingrese un numero validon ");
+                        opcion.nextLine();
+                        System.out.println("Id de partida ");
+                    }
+
+                   boolean elimnado = impPartida.delete(opcion.nextInt());
+                    if (elimnado) {
+                        System.out.println("Partida Eliminada correctamente.");
+                    }else {
+                        System.out.println("No se ha podido elimnar la partida ");
+                    }
+
+                    case 3:
+                    System.out.println("Buscar Partida");
+                    System.out.println("Id del partida");
+
+                    int id_partida = leerOpcion(opcion);
+
+                   partida partidaencontrada= impPartida.getPartida(id_partida);
+                   if (partidaencontrada != null) {
+
+                       System.out.println(
+                               "Id del partida"+ partidaencontrada.getId_partida()+
+                                       "id del juego" + partidaencontrada.getIdJuego()+
+                                       "plazas libres " + partidaencontrada.getPlazasLibres()
+                       );
+
+
+                   }
+
+
+
+
 
 
             }

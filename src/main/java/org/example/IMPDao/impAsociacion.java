@@ -8,9 +8,11 @@ import java.sql.*;
 
 public class impAsociacion implements asociacionDao {
     private Connection conexion;
+
     public impAsociacion() throws SQLException {
         this.conexion = DatabaseConnection.getInstance().getConnection();
     }
+
     @Override
     public int add(asociacion asociacion) {
         String sql = "INSERT INTO asociacion " +
@@ -39,7 +41,9 @@ public class impAsociacion implements asociacionDao {
 
         } catch (SQLException e) {
             System.out.println("Error al crear la asociación: "
-                    + e.getMessage());
+                    + e.getMessage()
+
+            );
             return -1;
         }
 

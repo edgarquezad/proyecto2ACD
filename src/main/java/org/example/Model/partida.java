@@ -10,6 +10,7 @@ public class partida {
     private Time hora;
     private int plazasLibres ;
     private int jugadoresDeseados ;
+    private int id_partida;
 
     public partida(int idJuego,Date fecha,  Time hora, int plazasLibres,int jugadoresDeseados) {
         this.idJuego = idJuego;
@@ -17,6 +18,18 @@ public class partida {
         this.plazasLibres = plazasLibres;
         this.fecha = fecha;
         this.hora = hora;
+    }
+
+    public partida(int id_partida) {
+        this.id_partida = id_partida;
+    }
+
+    public int getId_partida() {
+        return id_partida;
+    }
+
+    public void setId_partida(int id_partida) {
+        this.id_partida = id_partida;
     }
 
     public int getIdJuego() {

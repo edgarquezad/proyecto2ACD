@@ -76,13 +76,16 @@ public class impPartida implements partidaDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new partida(
+
+                    partida partidaEncontrada = new partida(
                             rs.getInt("id_juego"),
                             rs.getDate("fecha"),
                             rs.getTime("hora"),
                             rs.getInt("plazas_libres"),
                             rs.getInt("jugadores_deseados")
                     );
+                    partidaEncontrada.setId_partida(rs.getInt("id_partida"));
+                    return partidaEncontrada;
                 }
             }
 
