@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="650" prefWidth="1000" styleClass="fondo" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12">
+
+    <left>
+        <VBox prefWidth="230" spacing="18" styleClass="menu-lateral">
+            <padding>
+                <Insets bottom="25" left="18" right="18" top="30" />
+            </padding>
+
+            <Label styleClass="logo" text="MESA Y DADOS" />
+            <Label styleClass="subtitulo-menu" text="GESTIÓN" />
+
+            <Button maxWidth="Infinity" styleClass="boton-menu" text="Inicio" />
+            <Button maxWidth="Infinity" styleClass="boton-menu" text="Asociación" />
+            <Button maxWidth="Infinity" styleClass="boton-menu" text="Socios" />
+            <Button maxWidth="Infinity" styleClass="boton-menu" text="Juegos" />
+            <Button maxWidth="Infinity" onAction="#abrirPartidas" styleClass="boton-menu" text="Partidas" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="22">
+            <padding>
+                <Insets bottom="35" left="35" right="35" top="35" />
+            </padding>
+
+            <Label styleClass="titulo" text="Panel de administración" />
+            <Label styleClass="descripcion" text="Gestiona la asociación desde un único lugar." />
+
+            <VBox spacing="12" styleClass="tarjeta">
+                <Label styleClass="titulo-tarjeta" text="Bienvenido/a" />
+                <Label styleClass="descripcion" text="Selecciona una sección del menú para comenzar." />
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

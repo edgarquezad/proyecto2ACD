@@ -1,9 +1,6 @@
 package org.example;
 
-import org.example.IMPDao.impPartida;
-import org.example.IMPDao.socioDaoImpl;
-import org.example.IMPDao.impAsociacion;
-import org.example.IMPDao.impJuego;
+import org.example.IMPDao.*;
 import org.example.Model.*;
 import org.example.Utils.DatabaseConnection;
 
@@ -54,8 +51,7 @@ public class App {
                         gestionarPartidad(entrada);
                         break;
                     case 4:
-                        System.out.println("Gestión de invitadas");
-                        break;
+                        gestionarInvitados(entrada);
                     case 5:
                         gestionarAsociacion(entrada);
                         break;
@@ -109,7 +105,7 @@ public class App {
                 case 1:
                     System.out.println("----AÑADIR SOCIOS---\n ");
                     System.out.println("Ingrese el documento del socio: ");
-                    String documento =entrada.nextLine();
+                    String documento = entrada.nextLine();
 
                     System.out.println("Ingresa el nombre del socio: ");
                     String nombre = entrada.nextLine();
@@ -127,7 +123,7 @@ public class App {
                     System.out.println("Ingresa el email del socio: ");
                     String email = entrada.nextLine();
 
-                    socio socio = new socio(documento,nombre, apellidos, telefono, edad, email);
+                    socio socio = new socio(documento, nombre, apellidos, telefono, edad, email);
 
                     int resultado = socioDao.add(socio);
 
@@ -217,6 +213,7 @@ public class App {
                         System.out.println("No se ha encontrado el socio");
                     }
                     break;
+
                 case 0:
                     System.out.println("return home / regresar al menu ");
 
@@ -475,7 +472,157 @@ public class App {
 
     }
 
+    public static void gestionarInvitados(Scanner opcion) throws SQLException {
+        invitadoDaoImpl invitadoDao = new invitadoDaoImpl();
+        int seleccion;
+
+        System.out.println("--- Gestionar Partidad ---");
+        do {
+            System.out.println(
+                    "1-- Añadir Invitado\n" +
+                            "2-- Eliminar Invitado\n" +
+                            "3-- Buscar Invitado\n" +
+                            "4-- Listar Invitados\n" +
+                            "5-- Actualizar Invitado\n" +
+                            "0-- Salir"
+            );
+
+            seleccion = leerOpcion(opcion);
+
+
+            switch (seleccion) {
+                case 1:
+                    System.out.println("--- AÑADIR INVITADO ---");
+
+                    System.out.println("Documento:");
+                    String documento = opcion.nextLine();
+
+                    System.out.println("Nombre:");
+                    String nombre = opcion.nextLine();
+
+                    System.out.println("Apellidos:");
+                    String apellidos = opcion.nextLine();
+
+                    System.out.println("Teléfono:");
+                    String telefono = opcion.nextLine();
+
+                    System.out.println("Email:");
+                    String email = opcion.nextLine();
+
+                    invitado nuevoInvitado = new invitado(
+                            documento, nombre, apellidos, telefono, email
+                    );
+
+                    int resultado = invitadoDao.add(nuevoInvitado);
+
+                    if (resultado > 0) {
+                        System.out.println("Invitado añadido correctamente.");
+                    } else {
+                        System.out.println("Error al añadir el invitado.");
+                    }
+
+
+                case 2:
+                    System.out.println("--- ELIMINAR INVITADO ---");
+
+                    System.out.println("Documento del invitado:");
+                    documento = opcion.nextLine();
+
+                    boolean eliminado = invitadoDao.delete(documento);
+
+                    if (eliminado) {
+                        System.out.println("Invitado eliminado correctamente.");
+                    } else {
+                        System.out.println("No se ha podido eliminar el invitado.");
+                    }
+
+                    break;
+                case 3:
+                    System.out.println("--- EDITAR INVITADO ---");
+
+                    System.out.println("Documento del invitado:");
+                    documento = opcion.nextLine();
+
+                    invitado editarInvitado = invitadoDao.getInvitada(documento);
+
+                    if (editarInvitado != null) {
+
+                        System.out.println("Nuevo nombre:");
+                        editarInvitado.setNombre(opcion.nextLine());
+
+                        System.out.println("Nuevos apellidos:");
+                        editarInvitado.setApellido(opcion.nextLine());
+
+                        System.out.println("Nuevo teléfono:");
+                        editarInvitado.setTelefono(opcion.nextLine());
+
+                        System.out.println("Nuevo email:");
+                        editarInvitado.setEmail(opcion.nextLine());
+
+                        boolean actualizado = invitadoDao.update(editarInvitado);
+
+                        if (actualizado) {
+                            System.out.println("Invitado actualizado correctamente.");
+                        } else {
+                            System.out.println("Error al actualizar el invitado.");
+                        }
+
+                    } else {
+                        System.out.println("No existe ningún invitado con ese documento.");
+                    }
+
+                    break;
+                case 4:
+                    System.out.println("--- LISTA DE INVITADOS ---");
+
+                    List<invitado> invitados = invitadoDao.getInvitadas();
+
+                    if (invitados.isEmpty()) {
+                        System.out.println("No hay invitados registrados.");
+                    } else {
+                        for (invitado i : invitados) {
+                            System.out.println(
+                                    "Documento: " + i.getDocumento()
+                                            + " | Nombre: " + i.getNombre()
+                                            + " | Apellidos: " + i.getApellido()
+                                            + " | Teléfono: " + i.getTelefono()
+                                            + " | Email: " + i.getEmail()
+                            );
+                        }
+                    }
+
+                    break;
+                case 5:
+                    System.out.println("--- BUSCAR INVITADO ---");
+
+                    System.out.println("Documento del invitado:");
+                    documento = opcion.nextLine();
+
+                    invitado encontrado = invitadoDao.getInvitada(documento);
+
+                    if (encontrado != null) {
+                        System.out.println("Documento: " + encontrado.getDocumento());
+                        System.out.println("Nombre: " + encontrado.getNombre());
+                        System.out.println("Apellidos: " + encontrado.getApellido());
+                        System.out.println("Teléfono: " + encontrado.getTelefono());
+                        System.out.println("Email: " + encontrado.getEmail());
+                    } else {
+                        System.out.println("No existe ningún invitado con ese documento.");
+                    }
+
+                    break;
+
+
+            }
+
+
+        } while (seleccion != 0);
+
+
+    }
+
     public static void gestionarPartidad(Scanner opcion) throws SQLException {
+
 
         int seleccion;
 
@@ -488,7 +635,7 @@ public class App {
                     "4-- Listar Partida \n" +
                     "5-- Actualizar Partida \n" +
                     "0-- Salir");
-            seleccion = opcion.nextInt();
+            seleccion = leerOpcion(opcion);
 
             impPartida impPartida = new impPartida();
 
@@ -523,7 +670,7 @@ public class App {
                     }
                     break;
 
-                case 2 :
+                case 2:
                     System.out.println("Eliminar Partida");
                     System.out.println("Id de partida ");
                     while (!opcion.hasNextInt()) {
@@ -532,42 +679,193 @@ public class App {
                         System.out.println("Id de partida ");
                     }
 
-                   boolean elimnado = impPartida.delete(opcion.nextInt());
+                    boolean elimnado = impPartida.delete(opcion.nextInt());
                     if (elimnado) {
                         System.out.println("Partida Eliminada correctamente.");
-                    }else {
+                    } else {
                         System.out.println("No se ha podido elimnar la partida ");
                     }
 
-                    case 3:
+                case 3:
                     System.out.println("Buscar Partida");
                     System.out.println("Id del partida");
 
                     int id_partida = leerOpcion(opcion);
 
-                   partida partidaencontrada= impPartida.getPartida(id_partida);
-                   if (partidaencontrada != null) {
+                    partida partidaencontrada = impPartida.getPartida(id_partida);
+                    if (partidaencontrada != null) {
 
-                       System.out.println(
-                               "Id del partida"+ partidaencontrada.getId_partida()+
-                                       "id del juego" + partidaencontrada.getIdJuego()+
-                                       "plazas libres " + partidaencontrada.getPlazasLibres()
-                       );
+                        System.out.println(
+                                "Id del partida" + partidaencontrada.getId_partida() +
+                                        "id del juego" + partidaencontrada.getIdJuego() +
+                                        "plazas libres " + partidaencontrada.getPlazasLibres());
+
+                    }
+                case 4:
+
+                    List<partida> partidas = impPartida.getPartidas();
+
+                    if (!partidas.isEmpty()) {
+                        for (partida p : partidas) {
 
 
-                   }
+                            System.out.println("ID del juego : " + p.getIdJuego());
+                            System.out.println("ID de la partida: " + p.getId_partida());
 
 
+                        }
 
 
+                    } else {
+                        System.out.println("No se encontro partidas disponibles lista vacia ");
+                    }
+
+                case 5:
+                    System.out.println("Actualizar Partida");
+                    System.out.println("Id del partida");
+                    partida actualizar = impPartida.getPartida(opcion.nextInt());
+                    if (actualizar != null) {
+                        System.out.println("Actualizar fecha : ");
+                        actualizar.setFecha(Date.valueOf(opcion.next()));
+
+                        System.out.println("hora : ");
+                        actualizar.setHora(Time.valueOf(opcion.next()));
+
+                        System.out.println("plazasLibres: ");
+                        actualizar.setPlazasLibres(Integer.parseInt(opcion.next()));
+
+                        boolean actualizado = impPartida.update(actualizar);
+                        if (actualizado) {
+                            System.out.println("Partida actualizada correctamente");
+                        } else {
+                            System.out.println("No se ha podido actualizar la partida");
+                        }
+                    } else {
+                        System.out.println("No se encontro partida con ese id  ");
+                    }
+
+                case 6:
+                    System.out.println("--- AÑADIR PARTICIPANTE A LA PARTIDA ---");
+
+                    System.out.println("Introduce el ID de la partida:");
+                    int idPartida = opcion.nextInt();
+
+                    System.out.println("Introduce el documento del participante:");
+                    String documento = opcion.next();
+
+                    System.out.println("Tipo de participante:");
+                    System.out.println("1 - Socio");
+                    System.out.println("2 - Invitada");
+
+                    int tipo = opcion.nextInt();
+
+                    String tipoParticipante;
+
+                    if (tipo == 1) {
+                        tipoParticipante = "socia";
+                    } else if (tipo == 2) {
+                        tipoParticipante = "invitada";
+                    } else {
+                        System.out.println("Tipo no válido");
+                        break;
+                    }
+
+                    boolean addParticipante = impPartida.addParticipante(
+                            idPartida, documento, tipoParticipante);
+
+                    if (addParticipante) {
+                        System.out.println("Participante añadido correctamente");
+                    } else {
+                        System.out.println("No se ha podido añadir el participante");
+                    }
+
+                    break;
+                case 7:
+                    System.out.println("--- PARTICIPANTES DE UNA PARTIDA ---");
+
+                    System.out.println("Introduce el ID de la partida:");
+                    idPartida = opcion.nextInt();
+
+                    List<String> participantes = impPartida.getParticipantes(idPartida);
+
+                    if (participantes.isEmpty()) {
+                        System.out.println("No hay participantes en esta partida.");
+                    } else {
+                        for (String participante : participantes) {
+                            System.out.println(participante);
+                        }
+                    }
+
+                    break;
+                case 8:
+                    System.out.println("--- ELIMINAR PARTICIPANTE DE UNA PARTIDA ---");
+
+                    System.out.println("Introduce el ID de la partida:");
+                    int idPartidaEliminar = opcion.nextInt();
+
+                    System.out.println("Introduce el documento del participante:");
+                    String documentoEliminar = opcion.next();
+
+                    boolean eliminado = impPartida.eliminarParticipante(
+                            idPartidaEliminar, documentoEliminar);
+
+                    if (eliminado) {
+                        System.out.println("Participante eliminado correctamente.");
+                    } else {
+                        System.out.println("No se ha encontrado ese participante en la partida.");
+                    }
+
+                    break;
+                case 9:
+                    System.out.println("--- AÑADIR GANADOR DE UNA PARTIDA ---");
+
+                    System.out.println("Introduce el ID de la partida:");
+                    int idPartidaGanador = opcion.nextInt();
+
+                    System.out.println("Introduce el documento del ganador:");
+                    String documentoGanador = opcion.next();
+
+                    System.out.println("Introduce el tipo de participante:");
+                    String tipoGanador = opcion.next();
+
+                    boolean añadidoGanador = impPartida.addGanador(
+                            idPartidaGanador,
+                            documentoGanador,
+                            tipoGanador
+                    );
+
+                    if (añadidoGanador) {
+                        System.out.println("Ganador añadido correctamente.");
+                    } else {
+                        System.out.println("No se ha podido añadir el ganador.");
+                    }
+
+                    break;
+                case 10:
+                    System.out.println("--- GANADORES DE UNA PARTIDA ---");
+
+                    System.out.println("Introduce el ID de la partida:");
+                    int idPartidaConsulta = opcion.nextInt();
+
+                    List<String> ganadores = impPartida.getGanadores(idPartidaConsulta);
+
+                    if (ganadores.isEmpty()) {
+                        System.out.println("No hay ganadores registrados para esta partida.");
+                    } else {
+                        for (String ganador : ganadores) {
+                            System.out.println(ganador);
+                        }
+                    }
+
+                    break;
 
 
             }
 
-
-        }
-        while (seleccion != 0);
+        } while (seleccion != 0);
     }
+
+    /// ///////////////////////////////////////////77
 
     public static int leerOpcion(Scanner entrada) {
         while (!entrada.hasNextInt()) {

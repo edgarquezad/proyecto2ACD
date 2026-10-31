@@ -1,0 +1,60 @@
+
+.fondo {
+    -fx-background-color: #F3F5F9;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.menu-lateral {
+    -fx-background-color: #202C3B;
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.subtitulo-menu {
+    -fx-text-fill: #9EADBF;
+    -fx-font-size: 11px;
+    -fx-padding: 12 0 4 0;
+}
+
+.boton-menu {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E4EAF2;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 13 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.boton-menu:hover {
+    -fx-background-color: #35465B;
+}
+
+.titulo {
+    -fx-font-size: 29px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202C3B;
+}
+
+.descripcion {
+    -fx-font-size: 14px;
+    -fx-text-fill: #68778B;
+}
+
+.tarjeta {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+    -fx-border-color: #E2E7EF;
+    -fx-border-radius: 12;
+}
+
+.titulo-tarjeta {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202C3B;
+}

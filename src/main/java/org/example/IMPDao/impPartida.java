@@ -1,7 +1,9 @@
 package org.example.IMPDao;
+
 import org.example.Dao.partidaDao;
 import org.example.Model.partida;
 import org.example.Utils.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +14,7 @@ import java.util.List;
 public class impPartida implements partidaDao {
 
     private Connection conexion;
+
     public impPartida() throws SQLException {
         conexion = DatabaseConnection.getInstance().getConnection();
     }
@@ -68,6 +71,30 @@ public class impPartida implements partidaDao {
     }
 
     @Override
+    public boolean eliminarParticipante(int idPartida, String documento) {
+
+
+        String sql = "DELETE FROM participantes_partida " +
+                "WHERE id_partida = ? AND documento = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, idPartida);
+            ps.setString(2, documento);
+
+            int filas = ps.executeUpdate();
+
+            return filas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
     public partida getPartida(int id) {
         String sql = "SELECT * FROM partidas WHERE id_partida = ?";
 
@@ -85,6 +112,7 @@ public class impPartida implements partidaDao {
                             rs.getInt("jugadores_deseados")
                     );
                     partidaEncontrada.setId_partida(rs.getInt("id_partida"));
+
                     return partidaEncontrada;
                 }
             }
@@ -97,6 +125,7 @@ public class impPartida implements partidaDao {
     }
 
     @Override
+
     public List<partida> getPartidas() {
         List<partida> partidas = new ArrayList<>();
 
@@ -106,14 +135,16 @@ public class impPartida implements partidaDao {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                partidas.add(new partida(
-
+                partida partidaEncontrada = new partida(
                         rs.getInt("id_juego"),
                         rs.getDate("fecha"),
                         rs.getTime("hora"),
                         rs.getInt("plazas_libres"),
                         rs.getInt("jugadores_deseados")
-                ));
+                );
+
+                partidaEncontrada.setId_partida(rs.getInt("id_partida"));
+                partidas.add(partidaEncontrada);
             }
 
         } catch (SQLException e) {
@@ -147,6 +178,112 @@ public class impPartida implements partidaDao {
             System.out.println("Error al actualizar la partida: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public List<String> getParticipantes(int id_partida) {
+        List<String> participantes = new ArrayList<>();
+
+        String sql = "SELECT documento, tipo_participante " +
+                "FROM participantes_partida " +
+                "WHERE id_partida = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, id_partida);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                String documento = rs.getString("documento");
+                String tipo = rs.getString("tipo_participante");
+
+                participantes.add(documento + " - " + tipo);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return participantes;
+    }
+
+    @Override
+    public boolean addParticipante(int id_partida, String Documento, String tipoParticipante) {
+
+        String sql = "INSERT INTO participantes_partida " +
+                "(id_partida, documento, tipo_participante) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, id_partida);
+            ps.setString(2, Documento);
+            ps.setString(3, tipoParticipante);
+
+            int filas = ps.executeUpdate();
+
+            return filas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean addGanador(int idPartida, String documento, String tipoParticipante) {
+
+        String sql = "INSERT INTO ganadoras_partida " +
+                "(id_partida, documento, tipo_participante) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, idPartida);
+            ps.setString(2, documento);
+            ps.setString(3, tipoParticipante);
+
+            int filas = ps.executeUpdate();
+
+            return filas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public List<String> getGanadores(int idPartida) {
+
+        List<String> ganadores = new ArrayList<>();
+
+        String sql = "SELECT documento, tipo_participante " +
+                "FROM ganadoras_partida WHERE id_partida = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, idPartida);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String documento = rs.getString("documento");
+                String tipo = rs.getString("tipo_participante");
+
+                ganadores.add(documento + " - " + tipo);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ganadores;
     }
 
     private boolean datosValidos(partida partida) {

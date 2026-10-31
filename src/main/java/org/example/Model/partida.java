@@ -20,6 +20,7 @@ public class partida {
         this.hora = hora;
     }
 
+
     public partida(int id_partida) {
         this.id_partida = id_partida;
     }
