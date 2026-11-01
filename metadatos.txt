@@ -1,0 +1,14 @@
+--- METADATOS DE LA BASE DE DATOS ---
+Base de datos: MariaDB
+Versión: 10.11.16-MariaDB
+Driver: MariaDB Connector/J
+URL: jdbc:mariadb://localhost/proyectotm2?user=root
+
+--- TABLAS ---
+Tabla: asociacion
+Tabla: ganadoras_partida
+Tabla: invitadas
+Tabla: juegos
+Tabla: participantes_partida
+Tabla: partidas
+Tabla: socios

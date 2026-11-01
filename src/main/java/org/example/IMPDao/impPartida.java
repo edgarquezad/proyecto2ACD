@@ -165,6 +165,7 @@ public class impPartida implements partidaDao {
                 "plazas_libres = ?, jugadores_deseados = ? " +
                 "WHERE id_partida = ?";
 
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, partida.getIdJuego());
             ps.setDate(2, partida.getFecha());

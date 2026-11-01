@@ -3,6 +3,8 @@ package org.example;
 import org.example.IMPDao.*;
 import org.example.Model.*;
 import org.example.Utils.DatabaseConnection;
+import org.example.Utils.ExportarXML;
+import org.example.Utils.Metadatos;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -55,12 +57,18 @@ public class App {
                     case 5:
                         gestionarAsociacion(entrada);
                         break;
+
                     case 6:
-                        System.out.println("Metadatos de la base de datos");
+                        Metadatos metadatos = new Metadatos();
+
+                        metadatos.mostrarMetadatos();
+                        metadatos.exportarMetadatos();
+
                         break;
                     case 7:
-                        System.out.println("Exportación a XML");
-                        break;
+                        Exportar(entrada);
+
+
                     case 8:
                         System.out.println("Exportación a JSON");
                         break;
@@ -83,17 +91,65 @@ public class App {
 
 
     /// //////////////////////////////////////////////////////////////////////////////777
+    ///
+    ///
+    public static void Exportar(Scanner entrada) throws SQLException {
+        impJuego juego = new impJuego();
+        socioDaoImpl socio = new socioDaoImpl();
+        impPartida partida = new impPartida();
+        int seleccion;
+        System.out.println("""
+                Exportar XML   \s
+                1-- Juegos
+                2-- Socios
+                3-- Partidas
+                0-- Volver"""
+        );
+
+        seleccion = leerOpcion(entrada);
+
+        switch (seleccion) {
+
+            case 1:
+
+                ExportarXML.exportarJuegos(
+                        juego.getjuegos()
+                );
+                break;
+
+            case 2:
+                ExportarXML.exportarSocios(
+                        socio.getSocias()
+                );
+                break;
+
+            case 3:
+                ExportarXML.exportarPartidas(
+                        partida.getPartidas()
+                );
+                break;
+
+            case 0:
+                break;
+
+            default:
+                System.out.println("Opción no válida.");
+        }
+
+
+    }
 
     public static void gestionarSocios(Scanner entrada) throws SQLException {
         System.out.println("Gestión de socios");
         int opcionGestion;
         do {
-            System.out.println("1 - Añadir socios  \n" +
-                    "2 - Eliminar socios \n" +
-                    "3- Editar Socios \n" +
-                    "4 - Listar Socios \n" +
-                    "5 - Buscar Socios \n" +
-                    "0. - Volver"
+            System.out.println("""
+                    1 - Añadir socios \s
+                    2 - Eliminar socios\s
+                    3- Editar Socios\s
+                    4 - Listar Socios\s
+                    5 - Buscar Socios\s
+                    0. - Volver"""
             );
             System.out.print("Elige una opción: ");
             opcionGestion = leerOpcion(entrada);
@@ -118,7 +174,18 @@ public class App {
 
 
                     System.out.println("Ingrese la edad del socio: ");
-                    int edad = Integer.parseInt(entrada.nextLine());
+                    int edad = 0 ;
+                    boolean edadValido = false;
+                    while (!edadValido) {
+                        try {
+                            System.out.println("Ingresa el edad del socio: ");
+                            edad = Integer.parseInt(entrada.nextLine());
+                            edadValido = true;
+                        }catch (Exception e) {
+                            System.out.println("no es un dato valido indroduce un entero ");
+                        }
+                    }
+
 
                     System.out.println("Ingresa el email del socio: ");
                     String email = entrada.nextLine();
@@ -139,7 +206,6 @@ public class App {
 
                     System.out.println("Ingrese el documento del socio: ");
                     documento = entrada.nextLine();
-
 
                     boolean eliminado = socioDao.delete(documento);
 
@@ -327,8 +393,6 @@ public class App {
 
                     break;
                 case 3:
-                    System.out.println("edit Games / editar juego");
-
                     System.out.println("id del juego que se quiere editar :");
                     int id = Integer.parseInt(entrada.nextLine());
                     juego editarJuego = impJuego.getjuego(id);
@@ -336,8 +400,7 @@ public class App {
                     if (editarJuego == null) {
                         System.out.println("no existe juego con ese ID");
                     } else {
-                        System.out.println("Juego encontrado: /n" +
-                                "Nombre: " + editarJuego.getNombre());
+                        System.out.println("Juego encontrado: /n" + "Nombre: " + editarJuego.getNombre());
 
                         System.out.println("nuevo nombre: ");
                         editarJuego.setNombre(entrada.nextLine());
@@ -390,9 +453,9 @@ public class App {
                     break;
 
                 case 4:
-                    System.out.println("delete Games / eliminar juego");
-                    System.out.println("id del juego que se quiere eliminar :");
+                    System.out.println(" ----------ELIMINAR JUEGOS------------------");
 
+                    System.out.println("id del juego que se quiere eliminar :");
                     boolean eliminado = impJuego.delete(Integer.parseInt(entrada.nextLine()));
                     if (eliminado) {
                         System.out.println("Juego eliminado correctamente");
@@ -407,6 +470,7 @@ public class App {
                     System.out.println("Opción no válida.");
             }
         } while (opcionJuegos != 0);
+        System.out.println("asasa");
 
     }
 
@@ -428,7 +492,7 @@ public class App {
                     System.out.println("Nombre de la asociación:");
                     String nombre = entrada.nextLine().toUpperCase();
 
-                    System.out.println("CIF:");
+                    System.out.println("CIF: ejemplo A012345678 ");
                     String cif = entrada.nextLine();
 
                     System.out.println("Dirección:");
@@ -479,12 +543,13 @@ public class App {
         System.out.println("--- Gestionar Partidad ---");
         do {
             System.out.println(
-                    "1-- Añadir Invitado\n" +
-                            "2-- Eliminar Invitado\n" +
-                            "3-- Buscar Invitado\n" +
-                            "4-- Listar Invitados\n" +
-                            "5-- Actualizar Invitado\n" +
-                            "0-- Salir"
+                    """
+                            1-- Añadir Invitado\s
+                            2-- Eliminar Invitado
+                            3-- Buscar Invitado
+                            4-- Listar Invitados
+                            5-- Actualizar Invitado
+                            0-- Salir"""
             );
 
             seleccion = leerOpcion(opcion);
@@ -611,8 +676,6 @@ public class App {
                     }
 
                     break;
-
-
             }
 
 
@@ -623,22 +686,19 @@ public class App {
 
     public static void gestionarPartidad(Scanner opcion) throws SQLException {
 
-
+        impPartida impPartida = new impPartida();
         int seleccion;
 
         System.out.println("--- Gestionar Partidad ---");
         do {
-            System.out.println("" +
-                    "1-- Añadir Partidad  \n" +
-                    "2-- Eliminar Partida \n" +
-                    "3-- Buscar Partida \n" +
-                    "4-- Listar Partida \n" +
-                    "5-- Actualizar Partida \n" +
-                    "0-- Salir");
+            System.out.println("""
+                    1-- Añadir Partidad \s
+                    2-- Eliminar Partida\s
+                    3-- Buscar Partida\s
+                    4-- Listar Partida\s
+                    5-- Actualizar Partida\s
+                    0-- Salir""");
             seleccion = leerOpcion(opcion);
-
-            impPartida impPartida = new impPartida();
-
 
             switch (seleccion) {
 
@@ -648,10 +708,10 @@ public class App {
                     System.out.println("Id del juego");
                     int id_juego = opcion.nextInt();
 
-                    System.out.println("fecha: ");
+                    System.out.println("fecha 0000-00-00 : ");
                     Date fecha = Date.valueOf(opcion.next());
 
-                    System.out.println("hora : ");
+                    System.out.println("hora 00-00-00 : ");
                     Time hora = Time.valueOf(opcion.next());
 
                     System.out.println("plazasLibres: ");
@@ -671,15 +731,11 @@ public class App {
                     break;
 
                 case 2:
-                    System.out.println("Eliminar Partida");
+                    System.out.println("------ ELIMINAR PARTIDA ------");
                     System.out.println("Id de partida ");
-                    while (!opcion.hasNextInt()) {
-                        System.out.println("Ingrese un numero validon ");
-                        opcion.nextLine();
-                        System.out.println("Id de partida ");
-                    }
+                    int id_partida = leerOpcion(opcion);
 
-                    boolean elimnado = impPartida.delete(opcion.nextInt());
+                    boolean elimnado = impPartida.delete(id_partida);
                     if (elimnado) {
                         System.out.println("Partida Eliminada correctamente.");
                     } else {
@@ -690,15 +746,15 @@ public class App {
                     System.out.println("Buscar Partida");
                     System.out.println("Id del partida");
 
-                    int id_partida = leerOpcion(opcion);
+                    int _partida = leerOpcion(opcion);
 
-                    partida partidaencontrada = impPartida.getPartida(id_partida);
-                    if (partidaencontrada != null) {
+                    partida partidaEncontrada = impPartida.getPartida(_partida);
+                    if (partidaEncontrada != null) {
 
                         System.out.println(
-                                "Id del partida" + partidaencontrada.getId_partida() +
-                                        "id del juego" + partidaencontrada.getIdJuego() +
-                                        "plazas libres " + partidaencontrada.getPlazasLibres());
+                                "Id del partida" + partidaEncontrada.getId_partida() +
+                                        "id del juego" + partidaEncontrada.getIdJuego() +
+                                        "plazas libres " + partidaEncontrada.getPlazasLibres());
 
                     }
                 case 4:
@@ -707,23 +763,19 @@ public class App {
 
                     if (!partidas.isEmpty()) {
                         for (partida p : partidas) {
-
-
                             System.out.println("ID del juego : " + p.getIdJuego());
                             System.out.println("ID de la partida: " + p.getId_partida());
-
-
                         }
-
 
                     } else {
                         System.out.println("No se encontro partidas disponibles lista vacia ");
                     }
 
                 case 5:
-                    System.out.println("Actualizar Partida");
-                    System.out.println("Id del partida");
-                    partida actualizar = impPartida.getPartida(opcion.nextInt());
+                    System.out.println("------Actualizar Partida------");
+                    System.out.println("Id de la partida");
+                    int partida_id = leerOpcion(opcion);
+                    partida actualizar = impPartida.getPartida(partida_id);
                     if (actualizar != null) {
                         System.out.println("Actualizar fecha : ");
                         actualizar.setFecha(Date.valueOf(opcion.next()));
@@ -743,12 +795,13 @@ public class App {
                     } else {
                         System.out.println("No se encontro partida con ese id  ");
                     }
+                    break;
 
                 case 6:
                     System.out.println("--- AÑADIR PARTICIPANTE A LA PARTIDA ---");
 
                     System.out.println("Introduce el ID de la partida:");
-                    int idPartida = opcion.nextInt();
+                    int idPartida = leerOpcion(opcion);
 
                     System.out.println("Introduce el documento del participante:");
                     String documento = opcion.next();
@@ -817,28 +870,7 @@ public class App {
 
                     break;
                 case 9:
-                    System.out.println("--- AÑADIR GANADOR DE UNA PARTIDA ---");
 
-                    System.out.println("Introduce el ID de la partida:");
-                    int idPartidaGanador = opcion.nextInt();
-
-                    System.out.println("Introduce el documento del ganador:");
-                    String documentoGanador = opcion.next();
-
-                    System.out.println("Introduce el tipo de participante:");
-                    String tipoGanador = opcion.next();
-
-                    boolean añadidoGanador = impPartida.addGanador(
-                            idPartidaGanador,
-                            documentoGanador,
-                            tipoGanador
-                    );
-
-                    if (añadidoGanador) {
-                        System.out.println("Ganador añadido correctamente.");
-                    } else {
-                        System.out.println("No se ha podido añadir el ganador.");
-                    }
 
                     break;
                 case 10:
