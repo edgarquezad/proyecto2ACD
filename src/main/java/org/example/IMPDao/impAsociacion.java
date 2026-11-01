@@ -5,6 +5,8 @@ import org.example.Model.asociacion;
 import org.example.Utils.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class impAsociacion implements asociacionDao {
     private Connection conexion;
@@ -49,5 +51,74 @@ public class impAsociacion implements asociacionDao {
 
         return -1;
     }
+
+    @Override
+    public List<asociacion> getAsociaciones() {
+
+        List<asociacion> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM asociacion";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                asociacion a = new asociacion(
+                        rs.getString("nombre"),
+                        rs.getString("cif"),
+                        rs.getString("direccion"),
+                        rs.getString("telefono"),
+                        rs.getString("email"),
+                        rs.getDate("fecha_apertura")
+                );
+
+                a.setId_asociacion(rs.getInt("id_asociacion"));
+
+                lista.add(a);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al recuperar las asociaciones: " + e.getMessage());
+        }
+
+        return lista;
+    }
+    @Override
+    public asociacion getAsociacion(int id) {
+
+        String sql = "SELECT * FROM asociacion WHERE id_asociacion = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    asociacion a = new asociacion(
+                            rs.getString("nombre"),
+                            rs.getString("cif"),
+                            rs.getString("direccion"),
+                            rs.getString("telefono"),
+                            rs.getString("email"),
+                            rs.getDate("fecha_apertura")
+                    );
+
+                    a.setId_asociacion(rs.getInt("id_asociacion"));
+
+                    return a;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al recuperar la asociación: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+
 
 }
